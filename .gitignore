@@ -12,3 +12,9 @@ wheels/
 # sqlite db file
 *.db
 *.sqlite3
+
+# media file
+media/
+
+# ignore local environments
+.env.*.local
