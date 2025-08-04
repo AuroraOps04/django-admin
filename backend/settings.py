@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django_filters",
     "user",
     "dictionary",
+    "storage"
 ]
 
 MIDDLEWARE = [
@@ -113,11 +114,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
+    'DATE_FORMAT': "%Y-%m-%d",
+    'TIME_FORMAT': "%H:%M:%S",
+    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.OrderingFilter','django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 SIMPLE_JWT = {
     # 生产环境建议缩短访问令牌有效期
-    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 
     # 启用刷新令牌轮换以增强安全性
@@ -166,3 +171,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, env("MEDIA_ROOT"))
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 默认是 True.
+# 开启了之后, 如果访问的接口是带/然后请求的实际是不带/的话，就会返回301重定向到带/的接口
+APPEND_SLASH = False

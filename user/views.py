@@ -1,30 +1,45 @@
-from django.contrib.auth import logout
-from rest_framework import generics, status
-from rest_framework import permissions
+from django.contrib.auth import  get_user_model, logout
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from rest_framework_simplejwt.views import TokenObtainPairView
-from user.serializers import UserDetailSerializer, CustomTokenObtainPairSerializer
+from rest_framework.decorators import action
 
+from user.filters import UserFilter
+from user.serializers import CustomTokenObtainPairSerializer, UserSerializer
 
 # Create your views here.
 
+User = get_user_model()
+
 
 class RegisterView(generics.CreateAPIView):
-    serializer_class = UserDetailSerializer
+    serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
+    def perform_create(self, serializer):
+        # TODO: 给注册的用户默认角色
+        return super().perform_create(serializer)
 
-class UserInfoView(generics.RetrieveAPIView):
-    serializer_class = UserDetailSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = User.objects.all()
+    ordering = ('-date_joined',)
+    filterset_class = UserFilter
+    ordering_fields = ('date_joined',"id")
 
-    def get_object(self):
-        return self.request.user.detail
+    @action(detail=False, methods=['get'])
+    def info(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
+
 
 class LoginView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
 
 class LogoutView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -34,9 +49,11 @@ class LogoutView(APIView):
         logout(request)
         return Response()
 
+
 class LoginUserPermissionsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         perms = request.user.get_all_permissions()
         return Response(perms)
+

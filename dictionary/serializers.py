@@ -11,7 +11,6 @@ class DictionaryItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'dictionary', 'sort', 'label', 'value', 'is_default', 'css_class', 'list_class']
 
 class DictionarySerializer(serializers.ModelSerializer):
-    items = DictionaryItemSerializer(many=True, read_only=True)
     class Meta:
         model = Dictionary
-        fields = ['id', 'status', 'name', 'type', 'items']
+        fields = ['id', 'status', 'name', 'type']

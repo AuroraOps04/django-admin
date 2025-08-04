@@ -39,7 +39,7 @@ class DictionaryItem(models.Model):
         (Default, "是"),
         (NonDefault, "否")
     ]
-    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE)
+    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE, related_name="items")
     sort = models.SmallIntegerField(verbose_name="排序", default=1)
     label = models.CharField(max_length=150)
     value = models.CharField(max_length=500)
