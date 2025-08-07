@@ -3,6 +3,42 @@ from django.db import models
 # Create your models here.
 
 
+class Menu(models.Model):
+    FOLDER = "folder"
+    PAGE = "page"
+    MENU_TYPE = ((FOLDER, "mulu"), (PAGE, "yemian"))
+
+    name = models.CharField(verbose_name="路由名称", max_length=50, unique=True)
+    path = models.CharField(
+        verbose_name="路由路径",
+        max_length=100,
+    )
+    component = models.CharField(
+        verbose_name="组件路径",
+        max_length=100,
+    )
+    type = models.CharField(
+        max_length=10, verbose_name="caidan leixing", choices=MENU_TYPE
+    )
+    redirect = models.CharField(
+        verbose_name="重定向路径", max_length=100, null=True, blank=True
+    )
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
+
+    class Meta:
+        verbose_name = "菜单表"
+        verbose_name_plural = verbose_name
+
+    def __str__(self) -> str:
+        return f"{self.name} - {self.meta.title}"
+
+
 class MenuMeta(models.Model):
     BADGE_DOT = "dot"
     BADGE_NORMAL = "normal"
@@ -57,40 +93,13 @@ class MenuMeta(models.Model):
     )
     order = models.IntegerField(verbose_name="排序", null=True, blank=True)
 
+    menu = models.OneToOneField(
+        Menu, on_delete=models.CASCADE, related_name="meta", primary_key=True
+    )
+
     class Meta:
         verbose_name = "菜单元属性表"
         verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.title
-
-
-class Menu(models.Model):
-    name = models.CharField(verbose_name="路由名称", max_length=50, unique=True)
-    path = models.CharField(
-        verbose_name="路由路径",
-        max_length=100,
-    )
-    component = models.CharField(
-        verbose_name="组件路径",
-        max_length=100,
-    )
-    redirect = models.CharField(
-        verbose_name="重定向路径", max_length=100, null=True, blank=True
-    )
-    parent = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="children",
-    )
-    meta = models.OneToOneField(MenuMeta, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "菜单表"
-        verbose_name_plural = verbose_name
-
-    def __str__(self) -> str:
-        return f"{self.name} - {self.meta.title}"
-

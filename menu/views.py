@@ -16,6 +16,5 @@ class MenuViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def all(self, request):
         items = Menu.objects.prefetch_related("children").filter(parent=None).all()
-        print(items)
         serializer = AllMenuSerializer(items, many=True)
         return Response(serializer.data)

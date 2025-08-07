@@ -12,9 +12,6 @@ class VbenJsonRenderer(JSONRenderer):
             "data": { ... }
         }
         """
-        print("*" * 100, end="")
-        print("VBEN", end="")
-        print("*" * 100)
         # data = recursion(data, to_camel_case)
         response_data = {"code": 0, "message": "success", "data": data}
         if renderer_context and "response" in renderer_context:

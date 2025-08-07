@@ -13,8 +13,10 @@ class MenuSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_menu_data = validated_data.pop("meta")
-        menu_meta = MenuMeta.objects.create(**validated_menu_data)
-        return Menu.objects.create(meta=menu_meta, **validated_data)
+
+        menu = Menu.objects.create(**validated_data)
+        MenuMeta.objects.create(**validated_menu_data, menu=menu)
+        return menu
 
     class Meta:
         model = Menu
@@ -23,6 +25,7 @@ class MenuSerializer(serializers.ModelSerializer):
 
 class AllMenuSerializer(serializers.ModelSerializer):
     meta = MenuMetaSerializer()
+
     class Meta:
         model = Menu
         fields = ["id", "name", "meta", "path", "component", "children"]
