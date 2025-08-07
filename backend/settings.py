@@ -44,12 +44,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "config", # 必须在 rest_framework 之前，用来配置rest_framework
+    "config",  # 必须在 rest_framework 之前，用来配置rest_framework
     "rest_framework",
     "django_filters",
     "user",
     "dictionary",
-    "storage"
+    "storage",
 ]
 
 MIDDLEWARE = [
@@ -106,44 +106,49 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
+    # "DEFAULT_RENDERER_CLASSES": [
+    #     "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+    #     "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
+    # ],
+    "DEFAULT_PARSER_CLASSES": [
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
+        # "rest_framework.parsers.JSONParser",
+        # "rest_framework.parsers.FormParser",
+        # "rest_framework.parsers.MultiPartParser",
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
-    'DATE_FORMAT': "%Y-%m-%d",
-    'TIME_FORMAT': "%H:%M:%S",
-    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.OrderingFilter','django_filters.rest_framework.DjangoFilterBackend'],
+    "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
+    "DATE_FORMAT": "%Y-%m-%d",
+    "TIME_FORMAT": "%H:%M:%S",
+    "DEFAULT_FILTER_BACKENDS": [
+        "rest_framework.filters.OrderingFilter",
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
 }
 
 SIMPLE_JWT = {
     # 生产环境建议缩短访问令牌有效期
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     # 启用刷新令牌轮换以增强安全性
-    'ROTATE_REFRESH_TOKENS': True, # 如果为True，每次刷新访问令牌时都会返回一个新的刷新令牌
-    'BLACKLIST_AFTER_ROTATION': True,  # 当ROTATE_REFRESH_TOKENS为True时，旧的刷新令牌将被加入黑名单
-
+    "ROTATE_REFRESH_TOKENS": True,  # 如果为True，每次刷新访问令牌时都会返回一个新的刷新令牌
+    "BLACKLIST_AFTER_ROTATION": True,  # 当ROTATE_REFRESH_TOKENS为True时，旧的刷新令牌将被加入黑名单
     # 更新最后登录时间
-    'UPDATE_LAST_LOGIN': True,
-
+    "UPDATE_LAST_LOGIN": True,
     # 使用更安全的算法
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
     # 标准配置
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
     # 禁用滑动令牌（除非有特殊需求）
-    'SLIDING_TOKEN_REFRESH_LIFETIME': None,
-    'SLIDING_TOKEN_LIFETIME': None,
+    "SLIDING_TOKEN_REFRESH_LIFETIME": None,
+    "SLIDING_TOKEN_LIFETIME": None,
 }
 
 # Internationalization
