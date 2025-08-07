@@ -27,17 +27,29 @@ class MenuMeta(models.Model):
     badge_variants = models.CharField(
         verbose_name="徽标颜色", max_length=20, null=True, blank=True
     )
-    full_path_key = models.BooleanField(verbose_name="", default=True)
-    hide_children_in_menu = models.BooleanField(verbose_name="", default=False)
-    hide_in_bread_crumb = models.BooleanField(verbose_name="", default=False)
-    hide_in_menu = models.BooleanField(verbose_name="", default=False)
-    hide_in_tab = models.BooleanField(verbose_name="", default=False)
+    full_path_key = models.BooleanField(
+        verbose_name="是否将路由的完整路径作为tab key", default=True
+    )
+    hide_children_in_menu = models.BooleanField(
+        verbose_name="页面的子页面是否在菜单中隐藏", default=False
+    )
+    hide_in_bread_crumb = models.BooleanField(
+        verbose_name="页面是否在面包屑中隐藏", default=False
+    )
+    hide_in_menu = models.BooleanField(
+        verbose_name="页面是否在菜单中隐藏", default=False
+    )
+    hide_in_tab = models.BooleanField(
+        verbose_name="页面是否在标签页中隐藏", default=False
+    )
     icon = models.CharField(verbose_name="图标", max_length=50, null=True, blank=True)
     iframe_src = models.CharField(
         verbose_name="iframe 地址", max_length=200, null=True, blank=True
     )
-    ignore_access = models.BooleanField(verbose_name="", default=False)
-    keep_alive = models.BooleanField(verbose_name="", default=False)
+    ignore_access = models.BooleanField(verbose_name="页面是否忽略权限", default=False)
+    keep_alive = models.BooleanField(
+        verbose_name="页面是否开启缓存,仅在标签页启用时有效", default=False
+    )
     link = models.CharField(verbose_name="外链", max_length=200, null=True, blank=True)
     title = models.CharField(
         verbose_name="标题名称",
@@ -47,12 +59,20 @@ class MenuMeta(models.Model):
 
     class Meta:
         verbose_name = "菜单元属性表"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title
 
 
 class Menu(models.Model):
     name = models.CharField(verbose_name="路由名称", max_length=50, unique=True)
     path = models.CharField(
         verbose_name="路由路径",
+        max_length=100,
+    )
+    component = models.CharField(
+        verbose_name="组件路径",
         max_length=100,
     )
     redirect = models.CharField(
@@ -69,6 +89,8 @@ class Menu(models.Model):
 
     class Meta:
         verbose_name = "菜单表"
+        verbose_name_plural = verbose_name
 
     def __str__(self) -> str:
         return f"{self.name} - {self.meta.title}"
+
