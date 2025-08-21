@@ -8,11 +8,13 @@ from user.views import (
     LoginUserPermissionsView,
     LogoutView,
     UserViewSet,
+    RoleViewSet,
 )
 
 router = DefaultRouter(trailing_slash=False)
 
 router.register("user", UserViewSet)
+router.register("role", RoleViewSet)
 
 urlpatterns = [
     path("auth/login", LoginView.as_view()),

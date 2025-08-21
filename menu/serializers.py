@@ -53,7 +53,7 @@ class AllMenuSerializer(serializers.ModelSerializer):
             .order_by("meta__order")
             .all()
         )
-        return TreeMenuSerializer(items, many=True).data
+        return AllMenuSerializer(items, many=True).data
 
 
 # for tree select

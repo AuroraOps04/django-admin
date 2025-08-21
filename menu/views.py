@@ -15,6 +15,7 @@ class MenuViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def all(self, request):
+        # TODO: 根据角色获取路由
         items = (
             Menu.objects.prefetch_related("children")
             .filter(parent__isnull=True, status=True)
