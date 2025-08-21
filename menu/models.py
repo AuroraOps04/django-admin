@@ -4,27 +4,35 @@ from django.db import models
 
 
 class Menu(models.Model):
-    FOLDER = "folder"
+    CATELOG = "catelog"
     PAGE = "page"
-    MENU_TYPE = ((FOLDER, "mulu"), (PAGE, "yemian"))
+    BUTTON = "button"
+    LINK = "link"
+    IFRAME = "iframe"
+    MENU_TYPE = (
+        (CATELOG, "目录"),
+        (PAGE, "页面"),
+        (BUTTON, "按钮"),
+        (LINK, "外链"),
+        (IFRAME, "iframe"),
+    )
 
     name = models.CharField(verbose_name="路由名称", max_length=50, unique=True)
     path = models.CharField(
-        verbose_name="路由路径",
-        max_length=100,
+        verbose_name="路由路径", max_length=100, blank=True, null=True
     )
     component = models.CharField(
-        verbose_name="组件路径",
-        max_length=100,
+        verbose_name="组件路径", max_length=100, null=True, blank=True
     )
-    type = models.CharField(
-        max_length=10, verbose_name="caidan leixing", choices=MENU_TYPE
-    )
+    type = models.CharField(max_length=10, verbose_name="菜单类型", choices=MENU_TYPE)
     redirect = models.CharField(
         verbose_name="重定向路径", max_length=100, null=True, blank=True
     )
+    status = models.BooleanField(verbose_name="状态", default=True)
+
     parent = models.ForeignKey(
         "self",
+        verbose_name="父路由",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -94,7 +102,11 @@ class MenuMeta(models.Model):
     order = models.IntegerField(verbose_name="排序", null=True, blank=True)
 
     menu = models.OneToOneField(
-        Menu, on_delete=models.CASCADE, related_name="meta", primary_key=True
+        Menu,
+        on_delete=models.CASCADE,
+        related_name="meta",
+        primary_key=True,
+        default=None,
     )
 
     class Meta:

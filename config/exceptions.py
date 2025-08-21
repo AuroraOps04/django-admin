@@ -38,8 +38,8 @@ def vben_exception_handler(exc, context):
     response = exception_handler(exc, context)
     if response is not None:
         if isinstance(exc, Http404):
-            response.code = 404
-            response.message = "页面不存在"
+            response.code = 200
+            response.message = "资源不存在"
             response.data = None
         elif isinstance(exc, BizException):
             response.code = exc.status_code
@@ -47,14 +47,24 @@ def vben_exception_handler(exc, context):
         elif isinstance(exc, ValidationError):
             response.code = 400
             detail = exc.detail
+            errors = None
             if isinstance(detail, dict):
-                keys= list(exc.detail.keys())
+                keys = list(detail.keys())
                 if len(keys) > 0:
-                    response.message = f"{keys[0]}: {exc.detail[keys[0]][0]}"
+                    errors = detail[keys[0]]
+                    # response.message = f"{keys[0]}: {exc.detail[keys[0]][1]}"
             elif isinstance(detail, list):
-                response.message = detail[0]
-            else:
+                errors = detail[0]
+                # response.message = detail[0]
+            if errors is None:
                 response.message = "参数错误"
+            if isinstance(errors, dict):
+                keys = list(errors.keys())
+                if len(keys) > 0:
+                    response.message = errors[keys[0]]
+            elif isinstance(errors, list):
+                response.message = errors[0]
+
             response.data = None
         elif isinstance(exc, NotAuthenticated):
             response.code = 401
@@ -62,7 +72,7 @@ def vben_exception_handler(exc, context):
             response.message = "请先登录"
             response.data = None
         elif isinstance(exc, AuthenticationFailed):
-            if  exc.default_code == "authentication_failed":
+            if exc.default_code == "authentication_failed":
                 if exc.args[0] == "User not found":
                     response.code = 401
                     response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -73,7 +83,7 @@ def vben_exception_handler(exc, context):
                     response.code = 400
                     response.status_code = 400
                     response.message = "用户名密码错误"
-            elif exc.default_code == "token_not_valid" :
+            elif exc.default_code == "token_not_valid":
                 response.code = 401
                 response.status_code = status.HTTP_401_UNAUTHORIZED
                 response.message = "Token 错误或者过期"
@@ -87,4 +97,3 @@ def vben_exception_handler(exc, context):
             response.code = 500
             response.message = "系统异常"
     return response
-

@@ -133,7 +133,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     # 生产环境建议缩短访问令牌有效期
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     # 启用刷新令牌轮换以增强安全性
     "ROTATE_REFRESH_TOKENS": True,  # 如果为True，每次刷新访问令牌时都会返回一个新的刷新令牌

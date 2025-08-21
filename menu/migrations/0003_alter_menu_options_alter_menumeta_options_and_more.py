@@ -5,32 +5,41 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('menu', '0002_alter_menumeta_full_path_key_and_more'),
+        ("menu", "0002_alter_menumeta_full_path_key_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='menu',
-            options={'verbose_name': '菜单表', 'verbose_name_plural': '菜单表'},
+            name="menu",
+            options={"verbose_name": "菜单表", "verbose_name_plural": "菜单表"},
         ),
         migrations.AlterModelOptions(
-            name='menumeta',
-            options={'verbose_name': '菜单元属性表', 'verbose_name_plural': '菜单元属性表'},
+            name="menumeta",
+            options={
+                "verbose_name": "菜单元属性表",
+                "verbose_name_plural": "菜单元属性表",
+            },
         ),
         migrations.RemoveField(
-            model_name='menu',
-            name='meta',
+            model_name="menu",
+            name="meta",
         ),
         migrations.RemoveField(
-            model_name='menumeta',
-            name='id',
+            model_name="menumeta",
+            name="id",
         ),
         migrations.AddField(
-            model_name='menumeta',
-            name='menu',
-            field=models.OneToOneField(default=0, on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='meta', serialize=False, to='menu.menu'),
+            model_name="menumeta",
+            name="menu",
+            field=models.OneToOneField(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                related_name="meta",
+                serialize=False,
+                to="menu.menu",
+            ),
             preserve_default=False,
         ),
     ]

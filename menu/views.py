@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 
-from menu.serializers import AllMenuSerializer, MenuSerializer
+from menu.serializers import AllMenuSerializer, MenuSerializer, TreeMenuSerializer
 from menu.models import Menu
 
 # Create your views here.
@@ -15,6 +15,18 @@ class MenuViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def all(self, request):
-        items = Menu.objects.prefetch_related("children").filter(parent=None).all()
+        items = (
+            Menu.objects.prefetch_related("children")
+            .filter(parent__isnull=True, status=True)
+            .exclude(type="button")
+            .order_by("meta__order")
+            .all()
+        )
         serializer = AllMenuSerializer(items, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def tree(self, request):
+        items = Menu.objects.filter(parent__isnull=True).order_by("meta__order").all()
+        serializer = TreeMenuSerializer(items, many=True)
         return Response(serializer.data)

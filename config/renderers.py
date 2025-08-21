@@ -20,7 +20,12 @@ class VbenJsonRenderer(JSONRenderer):
                 response_data["code"] = response.code
             elif hasattr(response, "status_code"):
                 status_code = response.status_code
-                if 200 <= status_code < 300:
+                if status_code == 204:
+                    response.status_code = 200
+                    renderer_context["response"] = response
+                    response_data["code"] = 0
+                    response_data["message"] = "删除成功"
+                elif 200 <= status_code < 300:
                     response_data["code"] = 0
                 else:
                     response_data["code"] = status_code
