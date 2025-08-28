@@ -1,16 +1,31 @@
 from rest_framework import serializers
 
-from dictionary.models import DictionaryItem,Dictionary
-
-
+from dictionary.models import DictionaryItem, Dictionary, SysConfig
 
 
 class DictionaryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = DictionaryItem
-        fields = ['id', 'status', 'dictionary', 'sort', 'label', 'value', 'is_default', 'css_class', 'list_class']
+        fields = [
+            "id",
+            "status",
+            "dictionary",
+            "sort",
+            "label",
+            "value",
+            "is_default",
+            "css_class",
+            "list_class",
+        ]
+
 
 class DictionarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Dictionary
-        fields = ['id', 'status', 'name', 'type']
+        fields = ["id", "status", "name", "type"]
+
+
+class SysConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SysConfig
+        fields = ["key", "value"]

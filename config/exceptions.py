@@ -38,8 +38,9 @@ def vben_exception_handler(exc, context):
     response = exception_handler(exc, context)
     if response is not None:
         if isinstance(exc, Http404):
-            response.code = 200
+            response.code = 404
             response.message = "资源不存在"
+            response.status_code = 200
             response.data = None
         elif isinstance(exc, BizException):
             response.code = exc.status_code
@@ -64,7 +65,8 @@ def vben_exception_handler(exc, context):
                     response.message = errors[keys[0]]
             elif isinstance(errors, list):
                 response.message = errors[0]
-
+            else:
+                response.message = errors
             response.data = None
         elif isinstance(exc, NotAuthenticated):
             response.code = 401

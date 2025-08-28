@@ -1,14 +1,16 @@
 from rest_framework import routers
 from django.urls import path, include
-from dictionary.views import DictionaryItemViewSet,DictionaryViewSet
+from dictionary.views import DictionaryItemViewSet, DictionaryViewSet, SysConfigViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 
-router.register('dict', DictionaryViewSet)
+router.register("dict", DictionaryViewSet)
 # item_router = routers.NestedSimpleRouter(router, 'dict', lookup='dictionary')
-router.register('dict_item', DictionaryItemViewSet)
+router.register("dict_item", DictionaryItemViewSet)
+router.register("sys_config", SysConfigViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]
+

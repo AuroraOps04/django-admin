@@ -20,18 +20,17 @@ class UploadFileViewSet(ModelViewSet):
     serializer_class = UploadFileSerializer
 
     def create(self, request, *args, **kwargs):
-        file = request.data.get('file')
+        file = request.data.get("file")
         if file is None:
-            raise ValidationError('请选择文件')
+            raise ValidationError("请选择文件")
         md5 = hashlib.md5(file.read()).hexdigest()
-        if UploadFile.objects.filter(md5=md5).exists():
-            raise ValidationError("文件已上传")
-        f = UploadFile(file=file)
-        f.original_name = file.name
-        f.md5 = md5
-        f.size = file.size
-        f.mimetype = file.content_type
-        f.save()
+        f = UploadFile.objects.filter(md5=md5).first()
+        if not f:
+            f = UploadFile(file=file)
+            f.original_name = file.name
+            f.md5 = md5
+            f.size = file.size
+            f.mimetype = file.content_type
+            f.save()
         serializer = UploadFileSerializer(f)
         return Response(serializer.data)
-
